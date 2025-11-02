@@ -1,6 +1,6 @@
 package com.emilija.usersservice.service;
 
-import com.emilija.usersservice.dto.UserDto;
+import com.emilija.usersservice.dto.UserDTO;
 import com.emilija.usersservice.entity.User;
 import com.emilija.usersservice.exception.ConflictException;
 import com.emilija.usersservice.exception.InsufficientBalanceException;
@@ -25,7 +25,7 @@ public class ConcreteUserService implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll() {
+    public List<UserDTO> findAll() {
         return repo.findAll()
                 .stream()
                 .map(mapper::toDto)
@@ -33,14 +33,14 @@ public class ConcreteUserService implements UserService {
     }
 
     @Override
-    public UserDto findById(Long id) {
+    public UserDTO findById(Long id) {
         var user = repo.findById(id)
                 .orElseThrow(() -> new NotFound("User not found"));
         return mapper.toDto(user);
     }
 
     @Override
-    public UserDto create(UserRequest req) {
+    public UserDTO create(UserRequest req) {
         repo.findByEmail(req.getEmail())
                 .ifPresent(u -> { throw new ConflictException("Email already exists"); });
         User user = mapper.fromRequest(req);
@@ -48,7 +48,7 @@ public class ConcreteUserService implements UserService {
     }
 
     @Override
-    public UserDto update(Long id, UserRequest req) {
+    public UserDTO update(Long id, UserRequest req) {
         var existing = repo.findById(id)
                 .orElseThrow(() -> new NotFound("User not found"));
         existing.setName(req.getName());

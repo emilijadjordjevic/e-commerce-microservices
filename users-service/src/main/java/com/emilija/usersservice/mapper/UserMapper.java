@@ -2,15 +2,15 @@ package com.emilija.usersservice.mapper;
 
 import org.springframework.stereotype.Component;
 import com.emilija.usersservice.entity.User;
-import com.emilija.usersservice.dto.UserDto;
+import com.emilija.usersservice.dto.UserDTO;
 import com.emilija.usersservice.dto.UserRequest;
 
 @Component
 public class UserMapper {
 
-    public UserDto toDto(User u) {
+    public UserDTO toDto(User u) {
         if (u == null) return null;
-        return new UserDto(u.getId(), u.getName(), u.getEmail(), u.getBalance());
+        return new UserDTO(u.getId(), u.getName(), u.getEmail(), u.getBalance());
     }
 
 //    public User toEntity(UserRequest r) {
