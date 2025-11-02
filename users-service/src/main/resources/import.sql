@@ -1,2 +1,2 @@
-INSERT INTO users (name, email) VALUES ('Ana Student', 'ana@example.com');
-INSERT INTO users (name, email) VALUES ('Marko Developer', 'marko@example.com');
+INSERT INTO users (name, email, balance) VALUES ('Ana Student', 'ana@example.com', 1000.0);
+INSERT INTO users (name, email, balance) VALUES ('Marko Developer', 'marko@example.com', 2000.0);

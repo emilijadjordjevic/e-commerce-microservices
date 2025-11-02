@@ -26,11 +26,13 @@ public class ConcreteUserService implements UserService {
 
     @Override
     public List<UserDTO> findAll() {
-        return repo.findAll()
-                .stream()
+        var users = repo.findAll();
+        System.out.println("Users fetched: " + users);
+        return users.stream()
                 .map(mapper::toDto)
                 .toList();
     }
+
 
     @Override
     public UserDTO findById(Long id) {
