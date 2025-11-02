@@ -3,8 +3,10 @@ package com.emilija.usersservice.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.emilija.usersservice.entity.User;
-import com.emilija.usersservice.service.UserService;
+import com.emilija.usersservice.dto.UserDto;
+import com.emilija.usersservice.dto.UserRequest;
+import com.emilija.usersservice.mapper.UserMapper;
+import com.emilija.usersservice.service.ConcreteUserService;
 
 import java.net.URI;
 import java.util.List;
@@ -12,35 +14,38 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserService service;
+    private final ConcreteUserService service;
+    private final UserMapper mapper;
 
-    public UserController(UserService service) {
+    public UserController(ConcreteUserService service, UserMapper mapper) {
         this.service = service;
+        this.mapper = mapper;
     }
 
     @GetMapping
-    public List<User> all() {
-        return service.findAll();
+    public List<UserDto> all() {
+        return service.findAll().stream().map(mapper::toDto).toList();
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@Valid @RequestBody User user) {
-        User saved = service.create(user);
-        return ResponseEntity.created(URI.create("/api/users/" + saved.getId())).body(saved);
+    public ResponseEntity<UserDto> create(@Valid @RequestBody UserRequest request) {
+        var created = service.createFromRequest(request);
+        var dto = mapper.toDto(created);
+        return ResponseEntity.created(URI.create("/api/users/" + dto.getId())).body(dto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable Long id) {
-        return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<UserDto> get(@PathVariable Long id) {
+        return service.findById(id)
+                .map(mapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @Valid @RequestBody User user) {
-        try {
-            return ResponseEntity.ok(service.update(id, user));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<UserDto> update(@PathVariable Long id, @Valid @RequestBody UserRequest request) {
+        var updated = service.updateFromRequest(id, request);
+        return ResponseEntity.ok(mapper.toDto(updated));
     }
 
     @DeleteMapping("/{id}")
