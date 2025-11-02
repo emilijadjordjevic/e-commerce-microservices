@@ -1,0 +1,9 @@
+`target/
+*.iml
+.idea/
+*.class
+.mvn/
+.DS_Store
+*.log
+
+EOF
