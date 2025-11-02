@@ -46,4 +46,10 @@ public class UserController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/deduct-balance")
+    public ResponseEntity<Void> deductBalance(@PathVariable Long id, @RequestParam Double amount) {
+        service.deductBalance(id, amount);
+        return ResponseEntity.ok().build();
+    }
 }

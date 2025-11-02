@@ -3,6 +3,7 @@ package com.emilija.usersservice.service;
 import com.emilija.usersservice.dto.UserDto;
 import com.emilija.usersservice.entity.User;
 import com.emilija.usersservice.exception.ConflictException;
+import com.emilija.usersservice.exception.InsufficientBalanceException;
 import com.emilija.usersservice.exception.NotFound;
 import com.emilija.usersservice.mapper.UserMapper;
 import org.springframework.stereotype.Service;
@@ -61,5 +62,16 @@ public class ConcreteUserService implements UserService {
             throw new NotFound("User not found");
         }
         repo.deleteById(id);
+    }
+
+    @Override
+    public void deductBalance(Long id, Double amount) {
+        User user = repo.findById(id)
+                .orElseThrow(() -> new NotFound("User not found"));
+        if (user.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientBalanceException("Insufficient balance");
+        }
+        user.setBalance(user.getBalance() - amount);
+        repo.save(user);
     }
 }

@@ -11,4 +11,5 @@ public interface UserService {
     UserDto create(UserRequest req);
     UserDto update(Long id, UserRequest req);
     void delete(Long id);
+    void deductBalance(Long id, Double amount);
 }
