@@ -1,65 +1,61 @@
 package com.emilija.usersservice.service;
 
+import com.emilija.usersservice.dto.UserDto;
+import com.emilija.usersservice.entity.User;
+import com.emilija.usersservice.exception.ConflictException;
 import com.emilija.usersservice.exception.NotFound;
+import com.emilija.usersservice.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.emilija.usersservice.entity.User;
 import com.emilija.usersservice.repository.UserRepository;
 import com.emilija.usersservice.dto.UserRequest;
-import com.emilija.usersservice.exception.ConflictException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class ConcreteUserService implements UserService {
     private final UserRepository repo;
+    private final UserMapper mapper;
 
-    public ConcreteUserService(UserRepository repo) {
+    public ConcreteUserService(UserRepository repo, UserMapper mapper) {
         this.repo = repo;
+        this.mapper = mapper;
     }
 
-    public List<User> findAll() {
-        return repo.findAll();
+    @Override
+    public List<UserDto> findAll() {
+        return repo.findAll()
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
-    public Optional<User> findById(Long id) {
-        return repo.findById(id);
+    @Override
+    public UserDto findById(Long id) {
+        var user = repo.findById(id)
+                .orElseThrow(() -> new NotFound("User not found"));
+        return mapper.toDto(user);
     }
 
-    public User create(User user) {
-        repo.findByEmail(user.getEmail()).ifPresent(u -> {
-            throw new ConflictException("Email already exists");
-        });
-        return repo.save(user);
+    @Override
+    public UserDto create(UserRequest req) {
+        repo.findByEmail(req.getEmail())
+                .ifPresent(u -> { throw new ConflictException("Email already exists"); });
+        User user = mapper.fromRequest(req);
+        return mapper.toDto(repo.save(user));
     }
 
-    // helper used by controller
-    public User createFromRequest(UserRequest req) {
-        User u = User.builder()
-                .name(req.getName())
-                .email(req.getEmail())
-                .build();
-        return create(u);
+    @Override
+    public UserDto update(Long id, UserRequest req) {
+        var existing = repo.findById(id)
+                .orElseThrow(() -> new NotFound("User not found"));
+        existing.setName(req.getName());
+        existing.setEmail(req.getEmail());
+        return mapper.toDto(repo.save(existing));
     }
 
-    public User update(Long id, User changes) {
-        return repo.findById(id).map(existing -> {
-            existing.setName(changes.getName());
-            existing.setEmail(changes.getEmail());
-            return repo.save(existing);
-        }).orElseThrow(() -> new NotFound("User not found"));
-    }
-
-    public User updateFromRequest(Long id, UserRequest req) {
-        return repo.findById(id).map(existing -> {
-            existing.setName(req.getName());
-            existing.setEmail(req.getEmail());
-            return repo.save(existing);
-        }).orElseThrow(() -> new NotFound("User not found"));
-    }
-
+    @Override
     public void delete(Long id) {
         if (!repo.existsById(id)) {
             throw new NotFound("User not found");

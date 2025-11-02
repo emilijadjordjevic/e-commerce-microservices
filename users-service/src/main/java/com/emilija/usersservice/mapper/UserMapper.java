@@ -10,20 +10,23 @@ public class UserMapper {
 
     public UserDto toDto(User u) {
         if (u == null) return null;
-        return new UserDto(u.getId(), u.getName(), u.getEmail());
+        return new UserDto(u.getId(), u.getName(), u.getEmail(), u.getBalance());
     }
 
-    public User toEntity(UserRequest r) {
-        if (r == null) return null;
+//    public User toEntity(UserRequest r) {
+//        if (r == null) return null;
+//        return User.builder()
+//                .name(r.getName())
+//                .email(r.getEmail())
+//                .balance(r.getBalance())
+//                .build();
+//    }
+
+    public User fromRequest(UserRequest request) {
         return User.builder()
-                .name(r.getName())
-                .email(r.getEmail())
+                .name(request.getName())
+                .email(request.getEmail())
+                .balance(request.getBalance())
                 .build();
-    }
-
-    public void updateEntityFromRequest(UserRequest req, User existing) {
-        if (req == null || existing == null) return;
-        existing.setName(req.getName());
-        existing.setEmail(req.getEmail());
     }
 }
