@@ -12,4 +12,5 @@ public interface ProductService {
     ProductDTO create(ProductRequest req);
     ProductDTO update(Long id, ProductRequest req) throws Exception;
     void delete(Long id);
+    void reserve(Long id, int quantity, String clientPaymentId);
 }

@@ -1,5 +1,6 @@
 package com.emilija.usersservice.controller;
 
+import com.emilija.usersservice.dto.PaymentActionRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,13 @@ public class UserController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/payments/deduct")
+    public ResponseEntity<Void> deduct(@PathVariable Long id,
+                                       @RequestBody PaymentActionRequest req) {
+        service.deductBalance(id, req.getAmount());
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/deduct-balance")

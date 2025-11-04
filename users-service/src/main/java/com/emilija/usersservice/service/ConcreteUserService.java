@@ -70,10 +70,17 @@ public class ConcreteUserService implements UserService {
     public void deductBalance(Long id, Double amount) {
         User user = repo.findById(id)
                 .orElseThrow(() -> new NotFound("User not found"));
-        if (user.getBalance().compareTo(amount) < 0) {
+        if (user.getBalance() < amount) {
             throw new InsufficientBalanceException("Insufficient balance");
         }
         user.setBalance(user.getBalance() - amount);
+        repo.save(user);
+    }
+
+    @Override
+    public void refundBalance(Long id, Double amount) {
+        User user = repo.findById(id).orElseThrow(() -> new NotFound("User not found"));
+        user.setBalance(user.getBalance() + amount);
         repo.save(user);
     }
 }

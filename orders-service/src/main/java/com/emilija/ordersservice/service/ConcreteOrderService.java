@@ -59,7 +59,7 @@ public class ConcreteOrderService implements OrderService {
         if (product == null) throw new NotFound("Product not found");
 
         Double total = product.getPrice() * req.getQuantity();
-        if (user.getBalance().compareTo(total) < 0) throw new InsufficientBalanceException("Insufficient balance");
+        if (user.getBalance() < total) throw new InsufficientBalanceException("Insufficient balance");
 
         deductBalanceProtected(req.getUserId(), total);
 

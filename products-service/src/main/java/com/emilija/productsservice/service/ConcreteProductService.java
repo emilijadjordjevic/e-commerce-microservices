@@ -58,4 +58,9 @@ public class ConcreteProductService implements ProductService{
     public void delete(Long id) {
 
     }
+
+    @Override
+    public void reserve(Long id, int quantity, String clientPaymentId) {
+
+    }
 }
