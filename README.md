@@ -21,10 +21,8 @@ Pokretanje u ispravnom redosledu:
 
 ## REST API Endpoints
 
-### Direktno na servise (bez Gateway-a)
-
-| Servis            | Endpoint Base URL                    | Swagger UI                           |
+| Servis           | Endpoint Base URL                    | Swagger UI                           |
 |------------------|--------------------------------------|-------------------------------------|
-| Users Service     | `http://localhost:8081/api/users`    | `http://localhost:8081/swagger-ui.html` |
-| Products Service  | `http://localhost:8082/api/products` | `http://localhost:8082/swagger-ui.html` |
-| Orders Service    | `http://localhost:8083/api/orders`   | `http://localhost:8083/swagger-ui.html` |
+| users-service    | `http://localhost:8081/api/users`    | `http://localhost:8081/swagger-ui.html` |
+| products-service | `http://localhost:8082/api/products` | `http://localhost:8082/swagger-ui.html` |
+| orders-service   | `http://localhost:8083/api/orders`   | `http://localhost:8083/swagger-ui.html` |
