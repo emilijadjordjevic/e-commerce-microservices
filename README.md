@@ -44,7 +44,7 @@ Pokretanje u ispravnom redosledu:
 <p float="left">
   <img src="images/gateway-load_balancer.png" width="200"/>
 </p>
-(images/images/gateway.png)
+<img src="images/images/gateway.png.png" width="200"/>
 
 ### APIs
 #### User API
