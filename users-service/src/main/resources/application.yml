@@ -27,7 +27,6 @@
 #      exposure:
 #        include: "*"
 
-# When you add Eureka later, uncomment and change host to "http://eureka:8761/eureka/"
 # eureka:
 #   client:
 #     service-url:
