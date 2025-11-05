@@ -55,12 +55,21 @@ public class ConcreteProductService implements ProductService{
     }
 
     @Override
-    public void delete(Long id) {
+    public void reduceStock(Long id, Integer quantity) {
+        var product = repo.findById(id).orElseThrow();
+        if (product.getStock() < quantity) {
+            throw new IllegalArgumentException("Not enough stock!");
+        }
 
+        product.setStock(product.getStock() - quantity);
+        repo.save(product);
     }
 
     @Override
-    public void reserve(Long id, int quantity, String clientPaymentId) {
+    public void addStock(Long id, Integer quantity) {
+        var product = repo.findById(id).orElseThrow();
 
+        product.setStock(product.getStock() + quantity);
+        repo.save(product);
     }
 }

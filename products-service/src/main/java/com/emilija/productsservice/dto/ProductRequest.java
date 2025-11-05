@@ -19,4 +19,8 @@ public class ProductRequest {
     @NotNull
     @Min(0)
     private Double price;
+
+    @NotNull
+    @Min(0)
+    private Integer stock;
 }

@@ -48,4 +48,10 @@ public class OrderController {
     public ResponseEntity<OrderDetailsDTO> getDetails(@PathVariable Long id) {
         return ResponseEntity.ok(service.getOrderDetails(id));
     }
+
+    @GetMapping("/user/{userId}")
+    public List<OrderDetailsDTO> getByUser(@PathVariable Long userId) {
+        return service.getOrdersByUserId(userId);
+    }
+
 }

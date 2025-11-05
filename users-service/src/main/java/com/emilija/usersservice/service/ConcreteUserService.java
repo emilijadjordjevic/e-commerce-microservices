@@ -33,7 +33,6 @@ public class ConcreteUserService implements UserService {
                 .toList();
     }
 
-
     @Override
     public UserDTO findById(Long id) {
         var user = repo.findById(id)
@@ -80,6 +79,7 @@ public class ConcreteUserService implements UserService {
     @Override
     public void refundBalance(Long id, Double amount) {
         User user = repo.findById(id).orElseThrow(() -> new NotFound("User not found"));
+        System.out.println("User balance before reundf: " + user.getBalance() + " amount: " + amount);
         user.setBalance(user.getBalance() + amount);
         repo.save(user);
     }

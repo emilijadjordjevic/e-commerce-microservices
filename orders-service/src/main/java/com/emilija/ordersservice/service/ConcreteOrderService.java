@@ -59,15 +59,31 @@ public class ConcreteOrderService implements OrderService {
         if (product == null) throw new NotFound("Product not found");
 
         Double total = product.getPrice() * req.getQuantity();
+        System.out.println("total: " + total);
+        System.out.println("User balance: " + user.getBalance());
         if (user.getBalance() < total) throw new InsufficientBalanceException("Insufficient balance");
 
-        deductBalanceProtected(req.getUserId(), total);
+        if (product.getStock() < req.getQuantity())
+            throw new IllegalArgumentException("Not enough stock");
 
-        Order order = mapper.fromRequest(req);
-        order.setTotalAmount(total);
-        Order saved = repo.save(order);
+        try {
+            deductBalanceProtected(req.getUserId(), total);
+            reduceStockProtected(req.getProductId(), req.getQuantity());
 
-        return mapper.toDto(saved);
+            Order order = mapper.fromRequest(req);
+            order.setTotalAmount(total);
+            Order saved = repo.save(order);
+
+            return mapper.toDto(saved);
+        }
+        catch (Exception e) {
+            try {
+//                userClient.refundBalance(req.getUserId(), total);
+            } catch (Exception rollbackEx) {
+                System.err.println("Rollback failed: " + rollbackEx.getMessage());
+            }
+            throw new RuntimeException("Order creation failed, rollback executed: " + e.getMessage());
+        }
     }
 
     @Override
@@ -86,7 +102,28 @@ public class ConcreteOrderService implements OrderService {
         return new OrderDetailsDTO(order.getId(), order.getQuantity(), order.getTotalAmount(), user, product);
     }
 
-    // Protected methods for Resilience4j
+    @Override
+    public List<OrderDetailsDTO> getOrdersByUserId(Long userId) {
+        var orders = repo.findByUserId(userId);
+
+        UserDTO user = getUserProtected(userId);
+        if (user == null) throw new NotFound("User not found");
+
+        return orders.stream().map(order -> {
+
+            ProductDTO product = getProductProtected(order.getProductId());
+            if (product == null) throw new NotFound("Product not found");
+            return new OrderDetailsDTO(
+                    order.getId(),
+                    order.getQuantity(),
+                    order.getTotalAmount(),
+                    user,
+                    product
+            );
+        }).collect(Collectors.toList());
+    }
+
+
     @CircuitBreaker(name = "userService", fallbackMethod = "getUserFallback")
     @Retry(name = "userService")
     protected UserDTO getUserProtected(Long id) {
@@ -94,7 +131,6 @@ public class ConcreteOrderService implements OrderService {
     }
 
     private UserDTO getUserFallback(Long id, Throwable t) {
-        // Short fallback response or error
         throw new RuntimeException("User service unavailable: " + t.getMessage());
     }
 
@@ -105,7 +141,6 @@ public class ConcreteOrderService implements OrderService {
     }
 
     private void deductBalanceFallback(Long id, BigDecimal amount, Throwable t) {
-        // Short fallback
         throw new RuntimeException("User service unavailable for deduct: " + t.getMessage());
     }
 
@@ -116,7 +151,17 @@ public class ConcreteOrderService implements OrderService {
     }
 
     private ProductDTO getProductFallback(Long id, Throwable t) {
-        // Short fallback
         throw new RuntimeException("Product service unavailable: " + t.getMessage());
     }
+
+    @CircuitBreaker(name = "productService", fallbackMethod = "reduceStockFallback")
+    @Retry(name = "productService")
+    protected void reduceStockProtected(Long id, Integer quantity) {
+        productClient.reduceStock(id, quantity);
+    }
+
+    private void reduceStockFallback(Long id, Integer quantity, Throwable t) {
+        throw new RuntimeException("Product service unavailable for stock update: " + t.getMessage());
+    }
+
 }

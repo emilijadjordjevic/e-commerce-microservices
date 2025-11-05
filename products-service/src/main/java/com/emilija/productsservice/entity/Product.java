@@ -27,4 +27,8 @@ public class Product {
     @NotNull
     @Min(0)
     private Double price;
+
+    @NotNull
+    @Min(0)
+    private Integer stock;
 }

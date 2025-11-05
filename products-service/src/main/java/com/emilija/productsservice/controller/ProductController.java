@@ -49,4 +49,14 @@ public class ProductController {
         return ResponseEntity.ok(updated);
     }
 
+    @PostMapping("/{id}/reduce-stock")
+    public void reduceStock(@PathVariable Long id, @RequestParam Integer quantity) {
+        service.reduceStock(id, quantity);
+    }
+
+    @PostMapping("/{id}/add-stock")
+    public void addStock(@PathVariable Long id, @RequestParam Integer quantity) {
+        service.addStock(id, quantity);
+    }
+
 }
