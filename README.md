@@ -30,17 +30,21 @@ Pokretanje u ispravnom redosledu:
 ## Architecture Diagrams and Screenshots
 
 ### Feign Flow
-<p float="left">
-  <img src="images/feign-call.png" width="200"/>
-  <img src="images/feign-proxy.png" width="200"/>
-  <img src="images/feign-proxy-detail.png" width="200"/>
-</p>
+
+<table>
+  <tr>
+    <td valign="top"><img src="images/feign-call.png" width="220" alt="feign-call" /></td>
+    <td valign="top"><img src="images/feign-proxy.png" width="220" alt="feign-proxy" /></td>
+    <td valign="top"><img src="images/feign-proxy-detail.png" width="220" alt="feign-proxy-detail" /></td>
+  </tr>
+</table>
+
 
 ### Gateway
 <p float="left">
-  <img src="images/gateway.png" width="200"/>
   <img src="images/gateway-load_balancer.png" width="200"/>
 </p>
+(images/images/gateway.png)
 
 ### APIs
 #### User API
@@ -51,6 +55,3 @@ Pokretanje u ispravnom redosledu:
 
 #### Order API
 ![Order API](images/order-api.png)
-
-#### Screenshot
-![Screenshot](images/Screenshot from 2025-11-05 09-55-39.png)
