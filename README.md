@@ -26,3 +26,31 @@ Pokretanje u ispravnom redosledu:
 | users-service    | `http://localhost:8081/api/users`    | `http://localhost:8081/swagger-ui.html` |
 | products-service | `http://localhost:8082/api/products` | `http://localhost:8082/swagger-ui.html` |
 | orders-service   | `http://localhost:8083/api/orders`   | `http://localhost:8083/swagger-ui.html` |
+
+## Architecture Diagrams and Screenshots
+
+### Feign Flow
+<p float="left">
+  <img src="images/feign-call.png" width="200"/>
+  <img src="images/feign-proxy.png" width="200"/>
+  <img src="images/feign-proxy-detail.png" width="200"/>
+</p>
+
+### Gateway
+<p float="left">
+  <img src="images/gateway.png" width="200"/>
+  <img src="images/gateway-load_balancer.png" width="200"/>
+</p>
+
+### APIs
+#### User API
+![User API](images/user-api.png)
+
+#### Product API
+![Product API](images/product-api.png)
+
+#### Order API
+![Order API](images/order-api.png)
+
+#### Screenshot
+![Screenshot](images/Screenshot from 2025-11-05 09-55-39.png)
