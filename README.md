@@ -41,10 +41,10 @@ Pokretanje u ispravnom redosledu:
 
 
 ### Gateway
-<p float="left">
-  <img src="images/gateway-load_balancer.png" width="200"/>
-</p>
-<img src="images/images/gateway.png" width="200"/>
+
+![Gateway load balancer](images/gateway-load_balancer.png)
+
+![Gateway](images/gateway.png)
 
 ### APIs
 #### User API
